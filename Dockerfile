@@ -19,11 +19,12 @@ RUN \
   echo "*** Install npm packages ***" && \
   npm ci --no-audit --no-fund --loglevel=error --no-progress --omit=dev && npm cache clean --force
 
-# Create config directory and link config.yaml
+# Create config and data directories with proper permissions
 RUN \
   rm -f "config.yaml" || true && \
   ln -s "./config/config.yaml" "config.yaml" || true && \
-  mkdir "config" || true
+  mkdir -p "config" "data" && \
+  chmod -R 777 "data" "config"
 
 # Pre-compile public libraries
 RUN \
