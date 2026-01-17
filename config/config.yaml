@@ -7,7 +7,7 @@ listenAddress:
 protocol:
   ipv4: true
   ipv6: false
-port: 8000
+port: 8080
 whitelistMode: false
 basicAuthMode: false
 securityOverride: true
