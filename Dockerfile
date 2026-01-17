@@ -1,52 +1,24 @@
-FROM node:lts-alpine3.22
+FROM node:20-alpine
 
-# Arguments
-ARG APP_HOME=/home/node/app
+WORKDIR /app
 
-# Install system dependencies
-RUN apk add --no-cache gcompat tini git git-lfs
+# Copy package files
+COPY package*.json ./
 
-# Create app directory
-WORKDIR ${APP_HOME}
+# Install production dependencies
+RUN npm ci --omit=dev --ignore-scripts
 
-# Set NODE_ENV to production
-ENV NODE_ENV=production
+# Copy source code
+COPY . .
 
-# Bundle app source
-COPY . ./
+# Copy our known working config
+COPY config/config.yaml config.yaml
 
-RUN \
-  echo "*** Install npm packages ***" && \
-  npm ci --no-audit --no-fund --loglevel=error --no-progress --omit=dev && npm cache clean --force
+# Create data directory
+RUN mkdir -p data && chmod 777 data
 
-# Create config and data directories with proper permissions
-RUN \
-  rm -f "config.yaml" || true && \
-  mkdir -p "config" "data" && \
-  chmod -R 777 "data" "config" /home/node
-
-# Pre-compile public libraries
-RUN \
-  echo "*** Run Webpack ***" && \
-  node "./docker/build-lib.js"
-
-# Set the entrypoint script
-RUN \
-  echo "*** Cleanup ***" && \
-  mv "./docker/docker-entrypoint.sh" "./" && \
-  rm -rf "./docker" && \
-  echo "*** Make docker-entrypoint.sh executable ***" && \
-  chmod +x "./docker-entrypoint.sh" && \
-  echo "*** Convert line endings to Unix format ***" && \
-  dos2unix "./docker-entrypoint.sh"
-
-# Fix extension repos permissions
-RUN git config --global --add safe.directory "*"
-
-# Ensure data directory exists and is writable
-RUN mkdir -p /home/node/app/data && chmod 777 /home/node/app/data
-
+# Expose port
 EXPOSE 8000
 
-# Ensure proper handling of kernel signals
-ENTRYPOINT ["tini", "--", "./docker-entrypoint.sh"]
+# Start directly with node, skipping any shell script wrapper logic
+CMD ["node", "server.js", "--port", "8000", "--listen", "--disableCsrf", "--whitelistMode", "false"]
