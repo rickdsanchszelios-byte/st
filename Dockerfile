@@ -22,9 +22,8 @@ RUN \
 # Create config and data directories with proper permissions
 RUN \
   rm -f "config.yaml" || true && \
-  ln -s "./config/config.yaml" "config.yaml" || true && \
   mkdir -p "config" "data" && \
-  chmod -R 777 "data" "config"
+  chmod -R 777 "data" "config" /home/node
 
 # Pre-compile public libraries
 RUN \
@@ -43,6 +42,9 @@ RUN \
 
 # Fix extension repos permissions
 RUN git config --global --add safe.directory "*"
+
+# Ensure data directory exists and is writable
+RUN mkdir -p /home/node/app/data && chmod 777 /home/node/app/data
 
 EXPOSE 8000
 
