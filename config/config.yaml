@@ -1,4 +1,4 @@
-# SillyTavern Config for HuggingFace Spaces
+# SillyTavern Config for Cloud Hosting
 dataRoot: ./data
 listen: true
 listenAddress:
@@ -13,8 +13,12 @@ basicAuthMode: false
 securityOverride: true
 disableCsrfProtection: true
 skipContentCheck: true
+autorun: true
+avoidLocalhost: true
+browserLaunch:
+  enabled: false
 hostWhitelist:
   enabled: false
   scan: false
   hosts:
-    - .hf.space
+    - .code.run
