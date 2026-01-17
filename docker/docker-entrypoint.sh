@@ -4,9 +4,10 @@
 mkdir -p /home/node/app/data
 chmod 777 /home/node/app/data
 
+# Use our custom config directly - don't copy from defaults
 if [ ! -e "config/config.yaml" ]; then
-    echo "Resource not found, copying from defaults: config.yaml"
-    cp -r "default/config.yaml" "config/config.yaml"
+    echo "Creating config from scratch"
+    mkdir -p config
 fi
 
 # Link config.yaml to root
@@ -15,5 +16,5 @@ ln -sf "./config/config.yaml" "./config.yaml" 2>/dev/null || true
 # Execute postinstall to auto-populate config.yaml with missing values
 npm run postinstall
 
-# Start the server
-exec node server.js --listen "$@"
+# Start the server on port 7860 explicitly
+exec node server.js --port 7860 --listen "$@"
