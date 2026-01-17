@@ -13,3 +13,8 @@ basicAuthMode: false
 securityOverride: true
 disableCsrfProtection: true
 skipContentCheck: true
+hostWhitelist:
+  enabled: false
+  scan: false
+  hosts:
+    - .hf.space
