@@ -16,5 +16,5 @@ ln -sf "./config/config.yaml" "./config.yaml" 2>/dev/null || true
 # Execute postinstall to auto-populate config.yaml with missing values
 npm run postinstall
 
-# Start the server on port 7860 explicitly
-exec node server.js --port 7860 --listen "$@"
+# Start the server on port 8000 explicitly
+exec node server.js --port 8000 --listen "$@"

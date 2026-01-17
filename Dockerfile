@@ -46,7 +46,7 @@ RUN git config --global --add safe.directory "*"
 # Ensure data directory exists and is writable
 RUN mkdir -p /home/node/app/data && chmod 777 /home/node/app/data
 
-EXPOSE 7860
+EXPOSE 8000
 
 # Ensure proper handling of kernel signals
 ENTRYPOINT ["tini", "--", "./docker-entrypoint.sh"]
